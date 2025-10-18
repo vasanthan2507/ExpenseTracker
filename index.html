@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Expense Tracker - Smart Financial Management</title>
+    
+    <!-- External Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --success-color: #27AE60;
+            --danger-color: #E74C3C;
+            --warning-color: #F39C12;
+            --info-color: #3498DB;
+            --dark-color: #2C3E50;
+            --light-color: #ECF0F1;
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        .hero-section {
+            background: var(--gradient-bg);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95) !important;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        .card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .expense-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+
+        .prediction-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .news-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--info-color);
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .validation-message {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .validation-message.error {
+            color: var(--danger-color);
+        }
+
+        .validation-message.success {
+            color: var(--success-color);
+        }
+
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 300px;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .btn.loading .loading {
+            display: inline-block;
+        }
+
+        .btn.loading .btn-text {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+                min-height: 80vh;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showPage('home')">
+                <i class="fas fa-chart-line text-primary"></i>
+                AI Expense Tracker
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" id="navbarMenu">
+                    <!-- Menu items will be populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page active">
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="hero-content">
+                            <h1 class="display-4 fw-bold mb-4">AI Expense Tracker</h1>
+                            <p class="lead mb-4">Smart Financial Management with AI-Powered Predictions</p>
+                            <p class="mb-5">Take control of your finances with our intelligent expense tracking system. Get personalized insights and AI-powered predictions to make better financial decisions.</p>
+                            <div class="d-flex gap-3 flex-wrap">
+                                <button class="btn btn-primary btn-lg" onclick="showPage('register')">
+                                    <i class="fas fa-rocket me-2"></i>Get Started
+                                </button>
+                                <button class="btn btn-outline-light btn-lg" onclick="showPage('login')">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="text-center">
+                            <i class="fas fa-chart-pie" style="font-size: 15rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center mb-5">
+                        <h2 class="fw-bold">Why Choose AI Expense Tracker?</h2>
+                        <p class="text-muted">Powerful features to transform your financial management</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon bg-primary text-white mx-auto">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <h5 class="fw-bold">Aadhar-Based Security</h5>
+                            <p class="text-muted">Secure authentication using Aadhar number to prevent duplicate registrations and ensure data integrity.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon bg-success text-white mx-auto">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <h5 class="fw-bold">Category Tracking</h5>
+                            <p class="text-muted">Organize expenses into categories like Food, Transportation, Healthcare, and more for better insights.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon bg-warning text-white mx-auto">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h5 class="fw-bold">Visual Analytics</h5>
+                            <p class="text-muted">Beautiful charts and graphs to visualize your spending patterns and track financial progress.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card text-center">
+                            <div class="feature-icon bg-info text-white mx-auto">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h5 class="fw-bold">AI Predictions</h5>
+                            <p class="text-muted">Smart predictions for future expenses based on your spending history and economic trends.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- REGISTER PAGE -->
+    <div id="registerPage" class="page">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h3 class="text-center mb-4">Create Account</h3>
+                            <form id="registerForm">
+                                <div class="mb-3">
+                                    <label for="regUsername" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="regUsername" required>
+                                    <div id="usernameValidation" class="validation-message"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="regEmail" required>
+                                    <div id="emailValidation" class="validation-message"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="regPassword" required>
+                                    <div id="passwordValidation" class="validation-message"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="regConfirmPassword" required>
+                                    <div id="confirmPasswordValidation" class="validation-message"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regAadhar" class="form-label">Aadhar Number</label>
+                                    <input type="text" class="form-control" id="regAadhar" placeholder="2345 6789 0123" maxlength="14" required>
+                                    <div id="aadharValidation" class="validation-message"></div>
+                                    <small class="text-muted">Format: XXXX XXXX XXXX (12 digits, cannot start with 0 or 1)</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100" id="registerBtn">
+                                    <span class="btn-text">Register</span>
+                                    <span class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i> Creating Account...
+                                    </span>
+                                </button>
+                            </form>
+                            <div class="text-center mt-3">
+                                <small>Already have an account? <a href="#" onclick="showPage('login')">Login here</a></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="page">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h3 class="text-center mb-4">Welcome Back</h3>
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label for="loginUsername" class="form-label">Username or Email</label>
+                                    <input type="text" class="form-control" id="loginUsername" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="loginPassword" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">
+                                        Remember me
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100" id="loginBtn">
+                                    <span class="btn-text">Login</span>
+                                    <span class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i> Signing In...
+                                    </span>
+                                </button>
+                            </form>
+                            <div class="text-center mt-3">
+                                <small>Don't have an account? <a href="#" onclick="showPage('register')">Register here</a></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboardPage" class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="mb-4">Dashboard</h2>
+                    <div id="welcomeMessage" class="alert alert-info"></div>
+                </div>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="summary-card">
+                        <h6>Total Expenses</h6>
+                        <h3 id="totalExpenses">₹0</h3>
+                        <i class="fas fa-rupee-sign fa-2x opacity-50"></i>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="summary-card">
+                        <h6>This Month</h6>
+                        <h3 id="thisMonthExpenses">₹0</h3>
+                        <i class="fas fa-calendar fa-2x opacity-50"></i>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="summary-card">
+                        <h6>Categories Used</h6>
+                        <h3 id="categoriesUsed">0</h3>
+                        <i class="fas fa-tags fa-2x opacity-50"></i>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="summary-card">
+                        <h6>Avg Daily</h6>
+                        <h3 id="avgDaily">₹0</h3>
+                        <i class="fas fa-chart-line fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Quick Actions</h5>
+                            <div class="d-flex gap-3 flex-wrap">
+                                <button class="btn btn-primary" onclick="showPage('add-expense')">
+                                    <i class="fas fa-plus me-2"></i>Add New Expense
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="showPage('expenses')">
+                                    <i class="fas fa-list me-2"></i>View All Expenses
+                                </button>
+                                <button class="btn btn-info" onclick="showPage('ai-prediction')">
+                                    <i class="fas fa-brain me-2"></i>Get AI Prediction
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Recent Expenses -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Recent Expenses</h5>
+                            <div id="recentExpenses">
+                                <p class="text-muted">No expenses yet. Add your first expense to get started!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mini Chart -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Expenses by Category</h5>
+                            <div style="height: 300px;">
+                                <canvas id="dashboardChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD EXPENSE PAGE -->
+    <div id="addExpensePage" class="page">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h3 class="mb-4">Add New Expense</h3>
+                            <form id="expenseForm">
+                                <div class="mb-3">
+                                    <label for="expenseAmount" class="form-label">Amount (₹)</label>
+                                    <input type="number" class="form-control" id="expenseAmount" min="0" step="0.01" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="expenseCategory" class="form-label">Category</label>
+                                    <select class="form-control" id="expenseCategory" required>
+                                        <option value="">Select Category</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="expenseDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="expenseDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="expenseDate" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="expenseDate" required>
+                                </div>
+                                <div class="d-flex gap-3">
+                                    <button type="submit" class="btn btn-primary" id="saveExpenseBtn">
+                                        <span class="btn-text">
+                                            <i class="fas fa-save me-2"></i>Save Expense
+                                        </span>
+                                        <span class="loading">
+                                            <i class="fas fa-spinner fa-spin"></i> Saving...
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="showPage('dashboard')">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW EXPENSES PAGE -->
+    <div id="expensesPage" class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="mb-4">Your Expenses</h2>
+                    
+                    <!-- Filters -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5>Filters</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="filterCategory" class="form-label">Category</label>
+                                    <select class="form-control" id="filterCategory">
+                                        <option value="">All Categories</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filterStartDate" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="filterStartDate">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filterEndDate" class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="filterEndDate">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="sortBy" class="form-label">Sort By</label>
+                                    <select class="form-control" id="sortBy">
+                                        <option value="date">Date (Newest First)</option>
+                                        <option value="amount">Amount (Highest First)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-primary" onclick="applyFilters()">
+                                    <i class="fas fa-filter me-2"></i>Apply Filters
+                                </button>
+                                <button class="btn btn-outline-secondary ms-2" onclick="clearFilters()">
+                                    <i class="fas fa-times me-2"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5>Total Expenses</h5>
+                                    <h3 id="expensesTotalAmount" class="text-primary">₹0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5>Number of Transactions</h5>
+                                    <h3 id="expensesCount" class="text-success">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5>Average Amount</h5>
+                                    <h3 id="expensesAverage" class="text-info">₹0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="row mb-4">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Category Distribution</h5>
+                                    <div style="height: 300px;">
+                                        <canvas id="pieChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Expenses by Category</h5>
+                                    <div style="height: 300px;">
+                                        <canvas id="barChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Expenses Over Time</h5>
+                                    <div style="height: 300px;">
+                                        <canvas id="lineChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense List -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>Expense List</h5>
+                                <button class="btn btn-outline-primary" onclick="exportExpenses()">
+                                    <i class="fas fa-download me-2"></i>Export CSV
+                                </button>
+                            </div>
+                            <div id="expensesList">
+                                <p class="text-muted text-center">No expenses found.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI PREDICTION PAGE -->
+    <div id="aiPredictionPage" class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="mb-4">AI Expense Predictions</h2>
+                    
+                    <!-- How it works -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5><i class="fas fa-info-circle text-info me-2"></i>How AI Predictions Work</h5>
+                            <p>Our AI analyzes your historical spending patterns, current economic trends, and financial news to predict your future expenses. The predictions are based on:</p>
+                            <ul>
+                                <li>Your personal spending history and patterns</li>
+                                <li>Seasonal trends and economic indicators</li>
+                                <li>Recent financial news and market conditions</li>
+                                <li>Category-specific growth patterns</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Generate Prediction -->
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <h5>Generate New Prediction</h5>
+                            <p class="text-muted">Get AI-powered insights for next month's expenses</p>
+                            <button class="btn btn-primary btn-lg" onclick="generatePrediction()" id="generatePredictionBtn">
+                                <span class="btn-text">
+                                    <i class="fas fa-brain me-2"></i>Generate AI Prediction
+                                </span>
+                                <span class="loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Analyzing Data...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Prediction Results -->
+                    <div id="predictionResults" class="d-none">
+                        <!-- Prediction Summary -->
+                        <div class="prediction-card mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-lg-8">
+                                    <h4>Next Month's Predicted Expenses</h4>
+                                    <h2 id="predictedTotal">₹0</h2>
+                                    <p id="predictionInsight"></p>
+                                </div>
+                                <div class="col-lg-4 text-end">
+                                    <div class="d-flex align-items-center justify-content-end">
+                                        <div class="me-3">
+                                            <small>Confidence Score</small>
+                                            <h3 id="confidenceScore">85%</h3>
+                                        </div>
+                                        <i class="fas fa-chart-line fa-3x opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category Predictions -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5>Category-wise Predictions</h5>
+                                <div id="categoryPredictions" class="row">
+                                    <!-- Category predictions will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comparison Chart -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5>Current vs Predicted Expenses</h5>
+                                <div style="height: 300px;">
+                                    <canvas id="comparisonChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Insights -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5><i class="fas fa-lightbulb text-warning me-2"></i>AI Recommendations</h5>
+                                <div id="aiRecommendations">
+                                    <!-- Recommendations will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Influence -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5><i class="fas fa-newspaper text-info me-2"></i>Economic News Considered</h5>
+                                <div id="newsInfluence">
+                                    <!-- News items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historical Predictions -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Historical Predictions</h5>
+                            <div id="historicalPredictions">
+                                <p class="text-muted">No previous predictions yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Disclaimer -->
+                    <div class="alert alert-warning mt-4">
+                        <strong>Disclaimer:</strong> AI predictions are estimates based on historical data and economic trends. Actual expenses may vary due to unforeseen circumstances and personal choices.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Application Data
+        const categories = [
+            { name: 'Food', icon: 'fa-utensils', color: '#FF6384' },
+            { name: 'Transportation', icon: 'fa-car', color: '#36A2EB' },
+            { name: 'Entertainment', icon: 'fa-film', color: '#FFCE56' },
+            { name: 'Healthcare', icon: 'fa-heartbeat', color: '#4BC0C0' },
+            { name: 'Utilities', icon: 'fa-lightbulb', color: '#9966FF' },
+            { name: 'Education', icon: 'fa-graduation-cap', color: '#FF9F40' },
+            { name: 'Shopping', icon: 'fa-shopping-cart', color: '#FF6384' },
+            { name: 'Other', icon: 'fa-ellipsis-h', color: '#C9CBCF' }
+        ];
+
+        const newsHeadlines = [
+            "Economic indicators show 3% inflation rate this quarter",
+            "Consumer spending up 5% in retail sector",
+            "Healthcare costs expected to rise by 8% next year",
+            "Transportation fuel prices stabilizing after recent surge",
+            "Digital entertainment subscriptions see 12% increase",
+            "Food prices remain stable despite global supply concerns",
+            "Education sector sees increased online learning investments",
+            "Utility costs projected to decrease with renewable energy adoption",
+            "E-commerce growth continues to drive shopping trends",
+            "Personal finance management apps gaining popularity"
+        ];
+
+        // Global Variables
+        let currentUser = null;
+        let currentPage = 'home';
+        let charts = {};
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            populateNavigation();
+            populateCategoryDropdowns();
+            initializeFormValidation();
+            setDefaultDate();
+        });
+
+        // Navigation Management
+        function populateNavigation() {
+            const navbarMenu = document.getElementById('navbarMenu');
+            
+            if (currentUser) {
+                navbarMenu.innerHTML = `
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('dashboard')">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('add-expense')">Add Expense</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('expenses')">View Expenses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('ai-prediction')">AI Prediction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                `;
+            } else {
+                navbarMenu.innerHTML = `
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('home')">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('register')">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('login')">Login</a>
+                    </li>
+                `;
+            }
+        }
+
+        function showPage(pageName) {
+            // Check if page requires authentication
+            const protectedPages = ['dashboard', 'add-expense', 'expenses', 'ai-prediction'];
+            if (protectedPages.includes(pageName) && !currentUser) {
+                showToast('Please login to access this page', 'warning');
+                showPage('login');
+                return;
+            }
+
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            const pageMap = {
+                'home': 'homePage',
+                'register': 'registerPage',
+                'login': 'loginPage',
+                'dashboard': 'dashboardPage',
+                'add-expense': 'addExpensePage',
+                'expenses': 'expensesPage',
+                'ai-prediction': 'aiPredictionPage'
+            };
+
+            const pageElement = document.getElementById(pageMap[pageName]);
+            if (pageElement) {
+                pageElement.classList.add('active');
+                currentPage = pageName;
+
+                // Page-specific initialization
+                switch(pageName) {
+                    case 'dashboard':
+                        loadDashboard();
+                        break;
+                    case 'expenses':
+                        loadExpenses();
+                        break;
+                    case 'ai-prediction':
+                        loadAIPredictions();
+                        break;
+                }
+            }
+        }
+
+        // Authentication Functions
+        function checkAuthentication() {
+            const user = getUserData('currentUser');
+            if (user) {
+                currentUser = user;
+                if (currentPage === 'home' || currentPage === 'login' || currentPage === 'register') {
+                    showPage('dashboard');
+                }
+            } else {
+                currentUser = null;
+                if (['dashboard', 'add-expense', 'expenses', 'ai-prediction'].includes(currentPage)) {
+                    showPage('home');
+                }
+            }
+            populateNavigation();
+        }
+
+        function logout() {
+            removeUserData('currentUser');
+            currentUser = null;
+            showToast('Logged out successfully', 'success');
+            showPage('home');
+            populateNavigation();
+        }
+
+        // Data Management Functions
+        function getUserData(key) {
+            try {
+                const data = JSON.parse(window.userData || '{}');
+                return data[key] || null;
+            } catch {
+                return null;
+            }
+        }
+
+        function setUserData(key, value) {
+            try {
+                const data = JSON.parse(window.userData || '{}');
+                data[key] = value;
+                window.userData = JSON.stringify(data);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        function removeUserData(key) {
+            try {
+                const data = JSON.parse(window.userData || '{}');
+                delete data[key];
+                window.userData = JSON.stringify(data);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // Initialize application data
+        if (!window.userData) {
+            window.userData = JSON.stringify({
+                users: [],
+                expenses: [],
+                predictions: []
+            });
+        }
+
+        // Form Validation
+        function initializeFormValidation() {
+            // Aadhar number formatting and validation
+            const aadharInput = document.getElementById('regAadhar');
+            if (aadharInput) {
+                aadharInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+                    
+                    if (value.length > 12) {
+                        value = value.substring(0, 12);
+                    }
+                    
+                    let formatted = value.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+                    if (value.length <= 8) {
+                        formatted = value.replace(/(\d{4})(\d{0,4})/, '$1 $2').trim();
+                    }
+                    
+                    e.target.value = formatted;
+                    validateAadhar(value);
+                });
+            }
+
+            // Real-time password validation
+            const passwordInput = document.getElementById('regPassword');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', validatePassword);
+            }
+
+            // Confirm password validation
+            const confirmPasswordInput = document.getElementById('regConfirmPassword');
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+            }
+
+            // Username validation
+            const usernameInput = document.getElementById('regUsername');
+            if (usernameInput) {
+                usernameInput.addEventListener('input', validateUsername);
+            }
+
+            // Email validation
+            const emailInput = document.getElementById('regEmail');
+            if (emailInput) {
+                emailInput.addEventListener('input', validateEmail);
+            }
+        }
+
+        function validateAadhar(value) {
+            const messageEl = document.getElementById('aadharValidation');
+            const aadharRegex = /^[2-9]{1}[0-9]{11}$/;
+            
+            if (value.length === 0) {
+                messageEl.textContent = '';
+                messageEl.className = 'validation-message';
+            } else if (value.length !== 12) {
+                messageEl.textContent = 'Aadhar number must be 12 digits';
+                messageEl.className = 'validation-message error';
+            } else if (!aadharRegex.test(value)) {
+                messageEl.textContent = 'Invalid Aadhar number format';
+                messageEl.className = 'validation-message error';
+            } else if (checkDuplicateAadhar(value)) {
+                messageEl.textContent = 'This Aadhar number is already registered';
+                messageEl.className = 'validation-message error';
+            } else {
+                messageEl.textContent = 'Valid Aadhar number';
+                messageEl.className = 'validation-message success';
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('regPassword').value;
+            const messageEl = document.getElementById('passwordValidation');
+            
+            if (password.length === 0) {
+                messageEl.textContent = '';
+                messageEl.className = 'validation-message';
+            } else if (password.length < 8) {
+                messageEl.textContent = 'Password must be at least 8 characters';
+                messageEl.className = 'validation-message error';
+            } else {
+                messageEl.textContent = 'Password strength: Good';
+                messageEl.className = 'validation-message success';
+            }
+            
+            // Also validate confirm password if it has value
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            if (confirmPassword) {
+                validateConfirmPassword();
+            }
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const messageEl = document.getElementById('confirmPasswordValidation');
+            
+            if (confirmPassword.length === 0) {
+                messageEl.textContent = '';
+                messageEl.className = 'validation-message';
+            } else if (password !== confirmPassword) {
+                messageEl.textContent = 'Passwords do not match';
+                messageEl.className = 'validation-message error';
+            } else {
+                messageEl.textContent = 'Passwords match';
+                messageEl.className = 'validation-message success';
+            }
+        }
+
+        function validateUsername() {
+            const username = document.getElementById('regUsername').value;
+            const messageEl = document.getElementById('usernameValidation');
+            
+            if (username.length === 0) {
+                messageEl.textContent = '';
+                messageEl.className = 'validation-message';
+            } else if (username.length < 3) {
+                messageEl.textContent = 'Username must be at least 3 characters';
+                messageEl.className = 'validation-message error';
+            } else if (checkDuplicateUsername(username)) {
+                messageEl.textContent = 'Username already exists';
+                messageEl.className = 'validation-message error';
+            } else {
+                messageEl.textContent = 'Username available';
+                messageEl.className = 'validation-message success';
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('regEmail').value;
+            const messageEl = document.getElementById('emailValidation');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email.length === 0) {
+                messageEl.textContent = '';
+                messageEl.className = 'validation-message';
+            } else if (!emailRegex.test(email)) {
+                messageEl.textContent = 'Invalid email format';
+                messageEl.className = 'validation-message error';
+            } else if (checkDuplicateEmail(email)) {
+                messageEl.textContent = 'Email already registered';
+                messageEl.className = 'validation-message error';
+            } else {
+                messageEl.textContent = 'Valid email';
+                messageEl.className = 'validation-message success';
+            }
+        }
+
+        function checkDuplicateAadhar(aadhar) {
+            const users = getUserData('users') || [];
+            return users.some(user => user.aadharNumber === aadhar);
+        }
+
+        function checkDuplicateUsername(username) {
+            const users = getUserData('users') || [];
+            return users.some(user => user.username === username);
+        }
+
+        function checkDuplicateEmail(email) {
+            const users = getUserData('users') || [];
+            return users.some(user => user.email === email);
+        }
+
+        // Form Submission Handlers
+        document.getElementById('registerForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleRegistration();
+        });
+
+        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleLogin();
+        });
+
+        document.getElementById('expenseForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleAddExpense();
+        });
+
+        function handleRegistration() {
+            const btn = document.getElementById('registerBtn');
+            btn.classList.add('loading');
+            
+            setTimeout(() => {
+                const username = document.getElementById('regUsername').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+                const aadhar = document.getElementById('regAadhar').value.replace(/\s/g, '');
+                
+                // Validation
+                if (!username || !email || !password || !aadhar) {
+                    showToast('Please fill all fields', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showToast('Passwords do not match', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                if (password.length < 8) {
+                    showToast('Password must be at least 8 characters', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                if (!/^[2-9]{1}[0-9]{11}$/.test(aadhar)) {
+                    showToast('Invalid Aadhar number', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                if (checkDuplicateAadhar(aadhar)) {
+                    showToast('Aadhar number already registered', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                if (checkDuplicateUsername(username)) {
+                    showToast('Username already exists', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                if (checkDuplicateEmail(email)) {
+                    showToast('Email already registered', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                // Create user
+                const users = getUserData('users') || [];
+                const newUser = {
+                    id: Date.now(),
+                    username,
+                    email,
+                    password: btoa(password), // Simple encoding for demo
+                    aadharNumber: aadhar,
+                    createdAt: new Date().toISOString()
+                };
+                
+                users.push(newUser);
+                setUserData('users', users);
+                
+                showToast('Registration successful! Please login.', 'success');
+                btn.classList.remove('loading');
+                
+                // Clear form and redirect
+                document.getElementById('registerForm').reset();
+                setTimeout(() => showPage('login'), 1500);
+            }, 1000);
+        }
+
+        function handleLogin() {
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('loading');
+            
+            setTimeout(() => {
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                const users = getUserData('users') || [];
+                const user = users.find(u => 
+                    (u.username === username || u.email === username) && 
+                    u.password === btoa(password)
+                );
+                
+                if (user) {
+                    setUserData('currentUser', user);
+                    currentUser = user;
+                    showToast(`Welcome back, ${user.username}!`, 'success');
+                    populateNavigation();
+                    showPage('dashboard');
+                } else {
+                    showToast('Invalid credentials', 'error');
+                }
+                
+                btn.classList.remove('loading');
+            }, 1000);
+        }
+
+        function handleAddExpense() {
+            const btn = document.getElementById('saveExpenseBtn');
+            btn.classList.add('loading');
+            
+            setTimeout(() => {
+                const amount = parseFloat(document.getElementById('expenseAmount').value);
+                const category = document.getElementById('expenseCategory').value;
+                const description = document.getElementById('expenseDescription').value;
+                const date = document.getElementById('expenseDate').value;
+                
+                if (!amount || !category || !description || !date) {
+                    showToast('Please fill all fields', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                if (amount <= 0) {
+                    showToast('Amount must be greater than 0', 'error');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                const expenses = getUserData('expenses') || [];
+                const newExpense = {
+                    id: Date.now(),
+                    userId: currentUser.id,
+                    amount,
+                    category,
+                    description,
+                    date,
+                    createdAt: new Date().toISOString()
+                };
+                
+                expenses.push(newExpense);
+                setUserData('expenses', expenses);
+                
+                showToast('Expense added successfully!', 'success');
+                btn.classList.remove('loading');
+                
+                // Clear form
+                document.getElementById('expenseForm').reset();
+                setDefaultDate();
+                
+                setTimeout(() => showPage('dashboard'), 1500);
+            }, 800);
+        }
+
+        // Utility Functions
+        function populateCategoryDropdowns() {
+            const selects = ['expenseCategory', 'filterCategory'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    if (selectId === 'filterCategory') {
+                        select.innerHTML = '<option value="">All Categories</option>';
+                    } else {
+                        select.innerHTML = '<option value="">Select Category</option>';
+                    }
+                    
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.name;
+                        option.textContent = category.name;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function setDefaultDate() {
+            const dateInput = document.getElementById('expenseDate');
+            if (dateInput) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+            
+            const toastHtml = `
+                <div id="${toastId}" class="toast show" role="alert">
+                    <div class="toast-header bg-${type} text-white">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+                        <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+                        <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('${toastId}').remove()"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            
+            setTimeout(() => {
+                const toast = document.getElementById(toastId);
+                if (toast) toast.remove();
+            }, 5000);
+        }
+
+        // Dashboard Functions
+        function loadDashboard() {
+            const welcomeMsg = document.getElementById('welcomeMessage');
+            welcomeMsg.innerHTML = `<i class="fas fa-user-circle me-2"></i>Welcome back, <strong>${currentUser.username}</strong>! Here's your financial overview.`;
+            
+            updateDashboardStats();
+            loadRecentExpenses();
+            loadDashboardChart();
+        }
+
+        function updateDashboardStats() {
+            const expenses = getUserExpenses();
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            // Calculate stats
+            const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const thisMonthExpenses = expenses.filter(exp => {
+                const expDate = new Date(exp.date);
+                return expDate.getMonth() === currentMonth && expDate.getFullYear() === currentYear;
+            }).reduce((sum, exp) => sum + exp.amount, 0);
+            
+            const categoriesUsed = new Set(expenses.map(exp => exp.category)).size;
+            const avgDaily = expenses.length > 0 ? totalExpenses / Math.max(1, Math.floor((now - new Date(expenses[0].date)) / (1000 * 60 * 60 * 24))) : 0;
+            
+            // Update DOM
+            document.getElementById('totalExpenses').textContent = `₹${totalExpenses.toLocaleString()}`;
+            document.getElementById('thisMonthExpenses').textContent = `₹${thisMonthExpenses.toLocaleString()}`;
+            document.getElementById('categoriesUsed').textContent = categoriesUsed;
+            document.getElementById('avgDaily').textContent = `₹${Math.round(avgDaily).toLocaleString()}`;
+        }
+
+        function loadRecentExpenses() {
+            const expenses = getUserExpenses().slice(-5).reverse();
+            const container = document.getElementById('recentExpenses');
+            
+            if (expenses.length === 0) {
+                container.innerHTML = '<p class="text-muted">No expenses yet. Add your first expense to get started!</p>';
+                return;
+            }
+            
+            container.innerHTML = expenses.map(expense => {
+                const category = categories.find(cat => cat.name === expense.category);
+                return `
+                    <div class="expense-item d-flex align-items-center">
+                        <div class="category-icon" style="background-color: ${category?.color || '#ccc'}">
+                            <i class="fas ${category?.icon || 'fa-question'}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">${expense.description}</div>
+                            <small class="text-muted">${expense.category} • ${new Date(expense.date).toLocaleDateString()}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">₹${expense.amount.toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadDashboardChart() {
+            const canvas = document.getElementById('dashboardChart');
+            if (!canvas) return;
+            
+            const expenses = getUserExpenses();
+            if (expenses.length === 0) {
+                canvas.style.display = 'none';
+                return;
+            }
+            
+            const categoryData = {};
+            expenses.forEach(expense => {
+                categoryData[expense.category] = (categoryData[expense.category] || 0) + expense.amount;
+            });
+            
+            const ctx = canvas.getContext('2d');
+            
+            if (charts.dashboard) {
+                charts.dashboard.destroy();
+            }
+            
+            charts.dashboard = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        data: Object.values(categoryData),
+                        backgroundColor: Object.keys(categoryData).map(cat => 
+                            categories.find(c => c.name === cat)?.color || '#ccc'
+                        )
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Expense Management
+        function getUserExpenses() {
+            const allExpenses = getUserData('expenses') || [];
+            return allExpenses.filter(expense => expense.userId === currentUser.id);
+        }
+
+        function loadExpenses() {
+            populateFilterDropdown();
+            applyFilters();
+        }
+
+        function populateFilterDropdown() {
+            const filterCategory = document.getElementById('filterCategory');
+            filterCategory.innerHTML = '<option value="">All Categories</option>';
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.name;
+                option.textContent = category.name;
+                filterCategory.appendChild(option);
+            });
+        }
+
+        function applyFilters() {
+            const category = document.getElementById('filterCategory').value;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            const sortBy = document.getElementById('sortBy').value;
+            
+            let expenses = getUserExpenses();
+            
+            // Apply filters
+            if (category) {
+                expenses = expenses.filter(exp => exp.category === category);
+            }
+            
+            if (startDate) {
+                expenses = expenses.filter(exp => exp.date >= startDate);
+            }
+            
+            if (endDate) {
+                expenses = expenses.filter(exp => exp.date <= endDate);
+            }
+            
+            // Apply sorting
+            expenses.sort((a, b) => {
+                if (sortBy === 'amount') {
+                    return b.amount - a.amount;
+                } else {
+                    return new Date(b.date) - new Date(a.date);
+                }
+            });
+            
+            displayExpenses(expenses);
+            updateExpenseSummary(expenses);
+            loadExpenseCharts(expenses);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterStartDate').value = '';
+            document.getElementById('filterEndDate').value = '';
+            document.getElementById('sortBy').value = 'date';
+            applyFilters();
+        }
+
+        function displayExpenses(expenses) {
+            const container = document.getElementById('expensesList');
+            
+            if (expenses.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">No expenses found.</p>';
+                return;
+            }
+            
+            container.innerHTML = expenses.map(expense => {
+                const category = categories.find(cat => cat.name === expense.category);
+                return `
+                    <div class="expense-item d-flex align-items-center">
+                        <div class="category-icon" style="background-color: ${category?.color || '#ccc'}">
+                            <i class="fas ${category?.icon || 'fa-question'}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">${expense.description}</div>
+                            <small class="text-muted">${expense.category} • ${new Date(expense.date).toLocaleDateString()}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">₹${expense.amount.toLocaleString()}</div>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteExpense(${expense.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateExpenseSummary(expenses) {
+            const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const count = expenses.length;
+            const average = count > 0 ? total / count : 0;
+            
+            document.getElementById('expensesTotalAmount').textContent = `₹${total.toLocaleString()}`;
+            document.getElementById('expensesCount').textContent = count;
+            document.getElementById('expensesAverage').textContent = `₹${Math.round(average).toLocaleString()}`;
+        }
+
+        function loadExpenseCharts(expenses) {
+            loadPieChart(expenses);
+            loadBarChart(expenses);
+            loadLineChart(expenses);
+        }
+
+        function loadPieChart(expenses) {
+            const canvas = document.getElementById('pieChart');
+            if (!canvas) return;
+            
+            const categoryData = {};
+            expenses.forEach(expense => {
+                categoryData[expense.category] = (categoryData[expense.category] || 0) + expense.amount;
+            });
+            
+            const ctx = canvas.getContext('2d');
+            
+            if (charts.pie) {
+                charts.pie.destroy();
+            }
+            
+            charts.pie = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        data: Object.values(categoryData),
+                        backgroundColor: Object.keys(categoryData).map(cat => 
+                            categories.find(c => c.name === cat)?.color || '#ccc'
+                        )
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadBarChart(expenses) {
+            const canvas = document.getElementById('barChart');
+            if (!canvas) return;
+            
+            const categoryData = {};
+            expenses.forEach(expense => {
+                categoryData[expense.category] = (categoryData[expense.category] || 0) + expense.amount;
+            });
+            
+            const ctx = canvas.getContext('2d');
+            
+            if (charts.bar) {
+                charts.bar.destroy();
+            }
+            
+            charts.bar = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        label: 'Expenses (₹)',
+                        data: Object.values(categoryData),
+                        backgroundColor: Object.keys(categoryData).map(cat => 
+                            categories.find(c => c.name === cat)?.color || '#ccc'
+                        )
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadLineChart(expenses) {
+            const canvas = document.getElementById('lineChart');
+            if (!canvas) return;
+            
+            // Group expenses by date
+            const dateData = {};
+            expenses.forEach(expense => {
+                const date = expense.date;
+                dateData[date] = (dateData[date] || 0) + expense.amount;
+            });
+            
+            // Sort dates and prepare data
+            const sortedDates = Object.keys(dateData).sort();
+            const amounts = sortedDates.map(date => dateData[date]);
+            
+            const ctx = canvas.getContext('2d');
+            
+            if (charts.line) {
+                charts.line.destroy();
+            }
+            
+            charts.line = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates.map(date => new Date(date).toLocaleDateString()),
+                    datasets: [{
+                        label: 'Daily Expenses (₹)',
+                        data: amounts,
+                        borderColor: '#4A90E2',
+                        backgroundColor: 'rgba(74, 144, 226, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function deleteExpense(expenseId) {
+            if (confirm('Are you sure you want to delete this expense?')) {
+                const expenses = getUserData('expenses') || [];
+                const filteredExpenses = expenses.filter(exp => exp.id !== expenseId);
+                setUserData('expenses', filteredExpenses);
+                
+                showToast('Expense deleted successfully', 'success');
+                applyFilters(); // Refresh the display
+                updateDashboardStats(); // Update dashboard if on dashboard
+            }
+        }
+
+        function exportExpenses() {
+            const expenses = getUserExpenses();
+            
+            if (expenses.length === 0) {
+                showToast('No expenses to export', 'warning');
+                return;
+            }
+            
+            const csvContent = 'Date,Category,Description,Amount\n' + 
+                expenses.map(exp => `${exp.date},${exp.category},"${exp.description}",${exp.amount}`).join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `expenses_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            showToast('Expenses exported successfully', 'success');
+        }
+
+        // AI Prediction Functions
+        function loadAIPredictions() {
+            loadHistoricalPredictions();
+        }
+
+        function generatePrediction() {
+            const btn = document.getElementById('generatePredictionBtn');
+            btn.classList.add('loading');
+            
+            setTimeout(() => {
+                const expenses = getUserExpenses();
+                
+                if (expenses.length < 3) {
+                    showToast('Need at least 3 expenses to generate predictions', 'warning');
+                    btn.classList.remove('loading');
+                    return;
+                }
+                
+                const prediction = calculateAIPrediction(expenses);
+                displayPredictionResults(prediction);
+                savePrediction(prediction);
+                
+                btn.classList.remove('loading');
+                showToast('AI prediction generated successfully!', 'success');
+            }, 2000);
+        }
+
+        function calculateAIPrediction(expenses) {
+            // Calculate historical averages
+            const categoryTotals = {};
+            const now = new Date();
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            
+            // Get last month's expenses
+            const lastMonthExpenses = expenses.filter(exp => {
+                const expDate = new Date(exp.date);
+                return expDate >= lastMonth && expDate < thisMonth;
+            });
+            
+            // Calculate category-wise predictions
+            categories.forEach(category => {
+                const categoryExpenses = lastMonthExpenses.filter(exp => exp.category === category.name);
+                const total = categoryExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+                
+                // Apply growth factor (5-15% based on category)
+                const growthFactors = {
+                    'Food': 1.05,
+                    'Transportation': 1.08,
+                    'Entertainment': 1.12,
+                    'Healthcare': 1.08,
+                    'Utilities': 1.03,
+                    'Education': 1.06,
+                    'Shopping': 1.15,
+                    'Other': 1.07
+                };
+                
+                const factor = growthFactors[category.name] || 1.07;
+                categoryTotals[category.name] = Math.round(total * factor);
+            });
+            
+            const totalPredicted = Object.values(categoryTotals).reduce((sum, amount) => sum + amount, 0);
+            const lastMonthTotal = lastMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const confidence = Math.min(95, Math.max(60, 70 + (expenses.length / 10) * 5));
+            
+            return {
+                id: Date.now(),
+                userId: currentUser.id,
+                predictedTotal: totalPredicted,
+                categoryPredictions: categoryTotals,
+                confidence: Math.round(confidence),
+                lastMonthTotal,
+                growthPercentage: lastMonthTotal > 0 ? Math.round(((totalPredicted - lastMonthTotal) / lastMonthTotal) * 100) : 0,
+                generatedAt: new Date().toISOString(),
+                month: new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString().substr(0, 7)
+            };
+        }
+
+        function displayPredictionResults(prediction) {
+            document.getElementById('predictionResults').classList.remove('d-none');
+            
+            // Update summary
+            document.getElementById('predictedTotal').textContent = `₹${prediction.predictedTotal.toLocaleString()}`;
+            document.getElementById('confidenceScore').textContent = `${prediction.confidence}%`;
+            
+            const insight = prediction.growthPercentage > 0 
+                ? `Expected ${prediction.growthPercentage}% increase from last month`
+                : prediction.growthPercentage < 0
+                ? `Expected ${Math.abs(prediction.growthPercentage)}% decrease from last month`
+                : 'Similar to last month\'s spending';
+            
+            document.getElementById('predictionInsight').textContent = insight;
+            
+            // Category predictions
+            const categoryContainer = document.getElementById('categoryPredictions');
+            categoryContainer.innerHTML = Object.entries(prediction.categoryPredictions)
+                .filter(([_, amount]) => amount > 0)
+                .map(([category, amount]) => {
+                    const cat = categories.find(c => c.name === category);
+                    return `
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div class="category-icon mx-auto mb-2" style="background-color: ${cat?.color || '#ccc'}">
+                                        <i class="fas ${cat?.icon || 'fa-question'}"></i>
+                                    </div>
+                                    <h6>${category}</h6>
+                                    <h4 class="text-primary">₹${amount.toLocaleString()}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            
+            // Load comparison chart
+            loadComparisonChart(prediction);
+            
+            // Generate recommendations
+            generateRecommendations(prediction);
+            
+            // Show news influence
+            displayNewsInfluence();
+        }
+
+        function loadComparisonChart(prediction) {
+            const canvas = document.getElementById('comparisonChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            if (charts.comparison) {
+                charts.comparison.destroy();
+            }
+            
+            const labels = Object.keys(prediction.categoryPredictions).filter(cat => 
+                prediction.categoryPredictions[cat] > 0
+            );
+            
+            // Get current month data for comparison
+            const expenses = getUserExpenses();
+            const currentData = {};
+            labels.forEach(category => {
+                const categoryExpenses = expenses.filter(exp => exp.category === category);
+                currentData[category] = categoryExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            });
+            
+            charts.comparison = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Current Month',
+                            data: labels.map(cat => currentData[cat] || 0),
+                            backgroundColor: 'rgba(74, 144, 226, 0.6)'
+                        },
+                        {
+                            label: 'Predicted Next Month',
+                            data: labels.map(cat => prediction.categoryPredictions[cat]),
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateRecommendations(prediction) {
+            const recommendations = [];
+            
+            if (prediction.growthPercentage > 10) {
+                recommendations.push('Your predicted expenses are significantly higher than last month. Consider reviewing your budget.');
+            }
+            
+            // Category-specific recommendations
+            const highestCategory = Object.entries(prediction.categoryPredictions)
+                .reduce((max, [cat, amount]) => amount > max.amount ? {category: cat, amount} : max, {category: '', amount: 0});
+            
+            if (highestCategory.amount > 0) {
+                recommendations.push(`${highestCategory.category} is your highest predicted expense category. Look for ways to optimize costs.`);
+            }
+            
+            if (prediction.confidence < 75) {
+                recommendations.push('Add more expense data to improve prediction accuracy.');
+            }
+            
+            recommendations.push('Set up expense alerts to stay within your predicted budget.');
+            recommendations.push('Consider automating savings before expenses to build an emergency fund.');
+            
+            const container = document.getElementById('aiRecommendations');
+            container.innerHTML = recommendations.map(rec => 
+                `<div class="alert alert-info"><i class="fas fa-lightbulb me-2"></i>${rec}</div>`
+            ).join('');
+        }
+
+        function displayNewsInfluence() {
+            const container = document.getElementById('newsInfluence');
+            const selectedNews = newsHeadlines.slice(0, 5);
+            
+            container.innerHTML = selectedNews.map(headline => 
+                `<div class="news-item"><i class="fas fa-newspaper me-2 text-info"></i>${headline}</div>`
+            ).join('');
+        }
+
+        function savePrediction(prediction) {
+            const predictions = getUserData('predictions') || [];
+            predictions.push(prediction);
+            setUserData('predictions', predictions);
+            loadHistoricalPredictions();
+        }
+
+        function loadHistoricalPredictions() {
+            const allPredictions = getUserData('predictions') || [];
+            const userPredictions = allPredictions.filter(pred => pred.userId === currentUser.id)
+                .sort((a, b) => new Date(b.generatedAt) - new Date(a.generatedAt));
+            
+            const container = document.getElementById('historicalPredictions');
+            
+            if (userPredictions.length === 0) {
+                container.innerHTML = '<p class="text-muted">No previous predictions yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = userPredictions.map(pred => `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6>Prediction for ${new Date(pred.month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h6>
+                                <p class="mb-1">Predicted Total: <strong>₹${pred.predictedTotal.toLocaleString()}</strong></p>
+                                <small class="text-muted">Generated on ${new Date(pred.generatedAt).toLocaleDateString()}</small>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="d-flex align-items-center justify-content-end">
+                                    <div class="me-3">
+                                        <small>Confidence</small><br>
+                                        <strong>${pred.confidence}%</strong>
+                                    </div>
+                                    <i class="fas fa-chart-bar fa-2x text-muted"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the application
+        checkAuthentication();
+    </script>
+</body>
+</html>
